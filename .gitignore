@@ -5,7 +5,6 @@
 
 # Ignore sample invoice files
 /tests/sample_data/sample_invoice.pdf
-/tests/sample_data/invalid_invoice.pdf
 
 # Ignore Jupyter notebook checkpoints and output data
 /notebook/invoice_data.csv
@@ -48,6 +47,3 @@ coverage.xml
 
 # Ignore everything in the notebook directory
 /notebook/*
-
-# Ignore sample_invoice.pdf specifically
-/tests/sample_data/sample_invoice.pdf
