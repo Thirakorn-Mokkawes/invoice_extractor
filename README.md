@@ -1,17 +1,21 @@
-# Invoice Extractor
+# Invoice Extractor and Plotting Tool
 
-`invoice_extractor` is a Python package that extracts data from PDF invoices and generates CSV files. The tool is designed to handle invoice data extraction while respecting user privacy. Users can configure the tool to hide sensitive information such as customer account numbers and addresses in the CSV output.
+![Example Plot](./src/plot/example_plot/example_plot.png)
+
+`invoice_extractor` is a Python package that extracts data from PDF invoices and generates CSV files. The tool is designed to handle invoice data extraction while respecting user privacy. Additionally, it provides an interactive plot for usage and cost breakdown based on the extracted CSV data.
 
 ## Features
 - Extracts key invoice details such as customer account, invoice number, total amount, meter readings, and usage details.
 - Generates a structured CSV file from the extracted data.
 - Allows optional exclusion of sensitive fields (`customer_account`, `customer_address`) for privacy.
 - Provides an easy-to-use command-line interface (CLI) for batch processing of invoices.
-- Provides flexible testing framework using `pytest`.
+- Visualizes the extracted invoice data in an interactive plot (stacked area chart and line chart).
+- Annotates the plot with total usage and grand total costs.
+- Provides a flexible testing framework using `pytest`.
 
 ## Requirements
 - Python 3.6 or later
-- Required packages: `pdfplumber`, `reportlab`, `pytest`
+- Required packages: `pdfplumber`, `reportlab`, `plotly`, `pytest`, `nbformat`
 
 ## Installation
 
@@ -29,14 +33,16 @@
     ```bash
     pip install .
     ```
+
 ## Uninstallation
 
 ```bash
 pip uninstall invoice_extractor 
 ```
+
 ## Usage
 
-### Command-Line Interface (CLI)
+### 1. Invoice Data Extraction (CLI)
 
 Once installed, you can run the tool from the command line using the `invoice-extractor` command.
 
@@ -49,20 +55,37 @@ invoice-extractor <input_directory> <output_directory> --show_customer_account -
 - **--show_customer_account**: Optional flag to include the customer account in the output.
 - **--show_customer_address**: Optional flag to include the customer address in the output.
 
-### Example:
+#### Example:
 ```bash
 invoice-extractor ./invoices ./output --show_customer_account --show_customer_address
 ```
-This command processes all the PDF files in the `./invoices` directory and saves the results to the `./output` directory. It includes both the customer account number and the customer address in the CSV output.
 
-### Importing in Python or Jupyter Notebooks
+### 2. Invoice Data Visualization (CLI)
 
-You can also import `invoice_extractor` and use it within a Python script or Jupyter notebook.
+You can also generate an interactive plot of the extracted invoice data using the `invoice-plot` command. This command allows you to visualize usage details, grand total, and FT cost per unit.
 
+```bash
+invoice-plot <input_csv> <output_directory>
+```
+
+- **input_csv**: Path to the CSV file containing the invoice data.
+- **output_directory**: Directory where the generated plot (HTML format) will be saved.
+
+#### Example:
+```bash
+invoice-plot ./csv/invoice_data.csv ./plots
+```
+
+This will generate an interactive HTML plot in the `./plots` directory.
+
+### 3. Importing in Python or Jupyter Notebooks
+
+You can also import `invoice_extractor` and `plot_area_line_chart_with_labels` for use within a Python script or Jupyter notebook.
+
+#### Example (Data Extraction):
 ```python
 from invoice_extractor.extractor import InvoiceExtractor
 
-# Example usage in a notebook
 pdf_path = "path_to_pdf_invoice.pdf"
 extractor = InvoiceExtractor(pdf_path)
 invoice_data = extractor.extract_data()
@@ -70,13 +93,25 @@ invoice_data = extractor.extract_data()
 print(invoice_data)
 ```
 
+#### Example (Data Visualization):
+```python
+import pandas as pd
+from plot.visualizations import plot_area_line_chart_with_labels
+
+# Load the CSV file
+csv_file = './invoice_data.csv'
+df = pd.read_csv(csv_file)
+
+# Prepare data as a list of dictionaries
+data = df.to_dict(orient='records')
+
+# Call the plot function to generate the interactive plot
+plot_area_line_chart_with_labels(data)
+```
+
 ## Testing
 
-The project includes a test suite to ensure the functionality of the invoice extractor. To run the tests, ensure you have `pytest` and `pytest-cov` installed. You can install the test dependencies using:
-
-```bash
-pip install pytest pytest-cov
-```
+The project includes a test suite to ensure the functionality of the invoice extractor and plotting tool. To run the tests, ensure you have `pytest` and `pytest-cov` installed.
 
 ### Testing Instructions:
 
@@ -89,12 +124,6 @@ pip install pytest pytest-cov
    ```
 
    If you do not provide the necessary PDF files, the tests related to invoice extraction will be skipped.
-
-### Example of Skipped Test Output:
-
-```plaintext
-SKIPPED [1] test_extractor.py:22: sample_invoice.pdf not found. Please add it to the sample_data directory.
-```
 
 ### Coverage Report
 
@@ -113,6 +142,10 @@ This tool provides options to protect sensitive information:
 
 Make sure that you respect the privacy of the data you are working with. When contributing to this project, use mock data or anonymized data in tests and examples.
 
+## Versioning
+
+This project follows [semantic versioning](https://semver.org/). The current version is **v1.1.0**, which includes the new plotting functionality.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -123,3 +156,5 @@ If you have any questions or need support, feel free to open an issue on the [Gi
 
 **Thirakorn Mokkawes, PhD**  
 Email: thirakorn.mokkawes@gmail.com
+
+---
