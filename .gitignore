@@ -6,11 +6,6 @@
 # Ignore sample invoice files
 /tests/sample_data/sample_invoice.pdf
 
-# Ignore Jupyter notebook checkpoints and output data
-/notebook/invoice_data.csv
-/notebook/invoice_data_2.csv
-/notebook/*.ipynb
-
 # Ignore Python bytecode
 __pycache__/
 *.py[cod]
